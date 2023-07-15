@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      
+      h1 {
+        text-align: center;
+      }
+      
+      form {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+      }
+      
+      input, button {
+        margin-bottom: 10px;
+        padding: 10px;
+        font-size: 16px;
+      }
+      
+      button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      
+      li {
+        background-color: #f9f9f9;
+        margin-bottom: 10px;
+        padding: 10px;
+      }
+      
+      li.completed {
+        background-color: #dff0d8;
+        text-decoration: line-through;
+      }      
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Task Manager</h1>
+    <form id="task-form">
+      <input type="text" id="title" placeholder="Task Title" required>
+      <input type="text" id="description" placeholder="Task Description" required>
+      <input type="datetime-local" id="due-date" required max="9999-12-31T23:59">
+      <input type="text" id="project" placeholder="Project Category" required>
+      <button type="submit">Add Task</button>
+    </form>
+    <ul id="task-list"></ul>
+  </div>
+
+  <script>
+    const taskForm = document.getElementById('task-form');
+    const taskList = document.getElementById('task-list');
+
+    taskForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const title = document.getElementById('title').value;
+      const description = document.getElementById('description').value;
+      const dueDate = document.getElementById('due-date').value;
+      const project = document.getElementById('project').value;
+
+      const taskItem = document.createElement('li');
+      taskItem.innerHTML = `
+        <h3>${title}</h3>
+        <p>${description}</p>
+        <p>Due Date: ${formatDate(dueDate)}</p>
+        <p>Project: ${project}</p>
+        <button class="complete-btn">Completed</button>
+        <button class="delete-btn">Delete</button>
+      `;
+      taskList.appendChild(taskItem);
+
+      taskForm.reset();
+    });
+
+    taskList.addEventListener('click', function(e) {
+      const targetElement = e.target;
+
+      if (targetElement.classList.contains('complete-btn')) {
+        targetElement.closest('li').classList.toggle('completed');
+      }
+
+      if (targetElement.classList.contains('delete-btn')) {
+        targetElement.closest('li').remove();
+      }
+    });
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+      return date.toLocaleDateString('en-US', options);
+    }
+
+  </script>
+</body>
+</html>
